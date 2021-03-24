@@ -56,7 +56,7 @@ buttonCart.addEventListener('click', openModal);
 const more = document.querySelector('.more');
 const navigationLink = document.querySelectorAll('.navigation-links');
 const longGoodsList = document.querySelector('.long-goods-list');
-const kana = document.querySelector('.kana')
+const allfill = document.querySelector('.allfill')
 
 const getGoods = async function(){
     const result = await fetch('db/db.json');
@@ -122,6 +122,20 @@ const filterCards = function(field, value){
     }).then(renderCards);
 };
 
+const filterCardss = function(field1, value1, field2, value2){
+    getGoods().then(function(data){
+        const filteredGoods = data.filter(function(good){
+            return good[field1] === value1 || good[field2] === value2;
+        });
+        return filteredGoods;
+    }).then(renderCards);
+};
+
+const shoeses = document.querySelector('.shoeses');
+shoeses.addEventListener('click', function(event){
+    event.preventDefault();
+    filterCardss('category', 'Shoes', 'category', 'Clothing');
+});
 
 
 navigationLink.forEach(function(link){
@@ -140,15 +154,8 @@ fashion.addEventListener('click', function(event){
     filterCards(field, value);
 });
 
-const shoeses = document.querySelector('.shoeses');
-shoeses.addEventListener('click', function(event){
-    event.preventDefault();
-    const field = 'category';
-    const value = 'Shoes';
-    filterCards(field, value);
-});
 
-kana.addEventListener('click', function(event){
+allfill.addEventListener('click', function(event){
     event.preventDefault();
     getGoods().then(renderCards);
 });
@@ -162,3 +169,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         });
     });
 });
+
