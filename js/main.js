@@ -271,6 +271,7 @@ const cart = {
                         price,
                         count: 1
                     });
+                    cart.updateCart();
                 });
         };
     },
