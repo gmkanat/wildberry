@@ -275,7 +275,11 @@ const cart = {
         };
     },
     updateCart(){
-        document.querySelector('.cart-count').innerHTML = `${cart.cartGoods.length}`;
+        
+        const totalPrice = cart.cartGoods.reduce(function(sum, item){
+            return sum + item.count;
+        }, 0);
+        document.querySelector('.cart-count').innerHTML = `${totalPrice}`;
     },
 
 }
