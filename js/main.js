@@ -15,11 +15,14 @@ const mySwiper = new Swiper('.swiper-container', {
 const buttonCart = document.querySelector('.button-cart');
 const modalCart = document.querySelector('#modal-cart');
 const openModal = function(){
+    cart.renderCart();
+   
     modalCart.classList.add('show');
 };
 
 const closeModal = function(){
     modalCart.classList.remove('show')
+    
 };
 modalCart.addEventListener('click', function(){
     if(event.target.classList.contains('overlay')||event.target.classList.contains('modal-close')){
@@ -170,3 +173,146 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+const cartTableGoods = document.querySelector('.cart-table__goods');
+const cardTableTotal = document.querySelector('.card-table__total');
+
+
+
+const cart = {
+    
+    cartGoods: [
+        {
+            id: "099",
+            name: "Кеды Киви",
+            price: 1000,
+            count: 3,
+        },
+        {
+            id: "091",
+            name: "Часы Киви",
+            price: 1900,
+            count: 2,
+        }
+    ],
+    
+    renderCart(){
+        cartTableGoods.textContent = '';
+        cart.cartGoods.forEach(function({id, name, price, count}){
+            const trGood = document.createElement('tr');
+            trGood.className = 'cart-item';
+            trGood.dataset.id = id;
+            trGood.innerHTML = `
+                <td>${name}</td>
+                <td>$${price}</td>
+                <td><button class="cart-btn-minus" data-id="${id}">-</button></td>
+                <td>${count}</td>
+                <td><button class="cart-btn-plus" data-id="${id}">+</button></td>
+                <td>${price*count}</td>
+                <td><button class="cart-btn-delete" data-id="${id}">x</button></td>
+            `;
+            cartTableGoods.append(trGood);
+        });
+        
+        const totalPrice = cart.cartGoods.reduce(function(sum, item){
+            return sum + item.price*item.count;
+        }, 0);
+
+        cardTableTotal.textContent = '$' + totalPrice;
+    },
+    deleteGood(id){
+        cart.cartGoods = cart.cartGoods.filter(function(item){
+            return id !== item.id;
+        });
+        cart.renderCart(); 
+        
+    },
+    minusGood(id){
+        for(const item of cart.cartGoods){
+            if(item.id == id){
+                if(item.count == 1){
+                    cart.deleteGood(id);
+                }else{
+                    item.count--;
+                }
+                
+                break;
+            }
+        }
+        cart.renderCart();
+        
+    },
+    plusGood(id){
+        for(const item of cart.cartGoods){
+            if(item.id == id){
+                item.count++;
+                break;
+            }
+        }
+        cart.renderCart(); 
+        
+    },
+    addCartGoods(id){
+        const goodItem = cart.cartGoods.find(function(item){
+            return item.id === id;
+        });
+        
+        console.log(goodItem);
+        
+        if(goodItem){
+            cart.plusGood(id);
+           
+        } else{
+            getGoods()
+                .then(data => data.find(item => item.id == id))
+                .then(({id, price, name}) => {
+                    cart.cartGoods.push({
+                        id,
+                        name,
+                        price,
+                        count: 1
+                    });
+                });
+        };
+    },
+    updateCart(){
+        document.querySelector('.cart-count').innerHTML = `${cart.cartGoods.length}`;
+    },
+
+}
+cart.updateCart();
+document.body.addEventListener('click', function(event){
+    const addToCart = event.target.closest('.add-to-cart');
+    if(addToCart){
+        cart.addCartGoods(addToCart.dataset.id);
+        cart.updateCart();
+    }
+});
+
+document.body.addEventListener('click', function(){
+    console.log(cart.cartGoods.length);
+    cart.updateCart();
+})
+
+
+cartTableGoods.addEventListener('click', function(event){
+    if(event.target.classList.contains('cart-btn-delete')){
+        cart.deleteGood(event.target.dataset.id);
+    };
+    if(event.target.classList.contains('cart-btn-minus')){
+        cart.minusGood(event.target.dataset.id);
+    };
+    if(event.target.classList.contains('cart-btn-plus')){
+        cart.plusGood(event.target.dataset.id);
+    };
+});
+
+
+const clearCart = document.querySelector('.cart-clear');
+
+
+
+clearCart.addEventListener('click', function(event){
+    event.preventDefault();
+    cart.cartGoods.length = 0; //[]
+    cart.renderCart();
+});
