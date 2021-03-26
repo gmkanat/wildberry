@@ -273,6 +273,7 @@ const cart = {
                     });
                     cart.updateCart();
                 });
+                
         };
     },
     updateCart(){
@@ -280,7 +281,10 @@ const cart = {
         const totalPrice = cart.cartGoods.reduce(function(sum, item){
             return sum + item.count;
         }, 0);
-        document.querySelector('.cart-count').innerHTML = `${totalPrice}`;
+        if(!totalPrice){
+            document.querySelector('.cart-count').innerHTML = "";
+        }
+        else document.querySelector('.cart-count').innerHTML = `${totalPrice}`;
     },
 
 }
@@ -321,3 +325,35 @@ clearCart.addEventListener('click', function(event){
     cart.cartGoods.length = 0; //[]
     cart.renderCart();
 });
+
+
+const modalForm = document.querySelector('.modal-form');
+
+const postData = dataUser => fetch('server.php',{
+    method: 'POST',
+    body: dataUser,
+});
+
+modalForm.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const formData = new FormData(modalForm);
+    formData.append('cartGoods', JSON.stringify(cart.cartGoods));
+    postData(formData)
+        .then(response =>{
+            if(!response.ok){
+                throw new Error(response.status);
+            }
+            alert('Your book was finished successfully!');
+        })
+        .catch(err => {
+            alert('There was an error, try it later!');
+            console.error(err);
+        })
+        .finally(() => {
+            closeModal();
+            modalForm.reset();
+            cart.cartGoods.length = 0;
+            cart.updateCart();
+        })
+})
