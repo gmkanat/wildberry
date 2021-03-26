@@ -243,7 +243,7 @@ const cart = {
             return item.id === id;
         });
         
-        console.log(goodItem);
+        // console.log(goodItem);
         
         if(goodItem){
             cart.plusGood(id);
@@ -285,7 +285,7 @@ document.body.addEventListener('click', function(event){
 });
 
 document.body.addEventListener('click', function(){
-    console.log(cart.cartGoods.length);
+    // console.log(cart.cartGoods.length);
     cart.updateCart();
 })
 
