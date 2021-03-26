@@ -180,20 +180,7 @@ const cardTableTotal = document.querySelector('.card-table__total');
 
 const cart = {
     
-    cartGoods: [
-        {
-            id: "099",
-            name: "Кеды Киви",
-            price: 1000,
-            count: 3,
-        },
-        {
-            id: "091",
-            name: "Часы Киви",
-            price: 1900,
-            count: 2,
-        }
-    ],
+    cartGoods: [],
     
     renderCart(){
         cartTableGoods.textContent = '';
