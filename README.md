@@ -1,5 +1,7 @@
 # wilberry
-Mini JavaScript project for shop
+```
+Simple shop with functionals.
 
-
-Корзина, работа с JSON файл, передача данных на php file
+Cart, working with JSON data and data transmissions.
+Tech stack: HTML, CSS, JavaScript, PHP, JSON.
+```
