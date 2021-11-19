@@ -1,4 +1,4 @@
-# wilberry
+# wildberry
 ```
 Simple shop with functionals.
 
